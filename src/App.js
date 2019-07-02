@@ -3,6 +3,9 @@ import './App.css';
 import Cronometro from './Components/Cronometro/index2';
 import ActivityForm from './Components/Formulario/index';
 
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+
 class App extends React.Component {
   constructor(){
     super();
@@ -145,35 +148,38 @@ class App extends React.Component {
       <div className="App">
         <h1>Cronómetros</h1>
         <hr></hr>
-        <div className=''>
-          {activities.map((actividad,index)=>
-              actividad.showEdit ?
-                  <ActivityForm
-                    key={index}
-                    constants={this.constants}
-                    activity={actividad.activity}
-                    project={actividad.project}
-                    showEdit={actividad.showEdit}
-                    handlerActivity={(e)=>this.editActivity(e , actividad.id)}
-                    handlerProject={(e)=>this.editProject(e, actividad.id)}
-                    handlerSubmit={(e)=>this.editSubmit(e, actividad.id)}
-                    handlerClose={()=>this.editClose(actividad.id)}
-                  >
-                  </ActivityForm>
-                :
-                  <div key={index}>
-                    <Cronometro 
+        <div >
+          <Box display="flex" flexDirection="row" p={1} m={1} bgcolor="background.paper" 
+            flexWrap="wrap" alignContent="flex-start">
+            {activities.map((actividad,index)=>
+                actividad.showEdit ?
+                    <ActivityForm
                       key={index}
-                      activity={actividad} 
-                      openEditActivitie={()=>this.openEditActivitie(actividad.id)}
-                      deleteActivity={()=>this.deleteActivity(actividad.id)}
-                      handlerTime={()=>this.handlerTime(actividad.id)}
-                      handlerStopTime={()=>this.handlerStopTime(actividad.id)}
-                      ></Cronometro>
-                    <br></br>
-                  </div>
-              )
-          }
+                      constants={this.constants}
+                      activity={actividad.activity}
+                      project={actividad.project}
+                      showEdit={actividad.showEdit}
+                      handlerActivity={(e)=>this.editActivity(e , actividad.id)}
+                      handlerProject={(e)=>this.editProject(e, actividad.id)}
+                      handlerSubmit={(e)=>this.editSubmit(e, actividad.id)}
+                      handlerClose={()=>this.editClose(actividad.id)}
+                    >
+                    </ActivityForm>
+                  :
+                    <Box key={index} width="25%">
+                      <Cronometro 
+                        key={index}
+                        activity={actividad} 
+                        openEditActivitie={()=>this.openEditActivitie(actividad.id)}
+                        deleteActivity={()=>this.deleteActivity(actividad.id)}
+                        handlerTime={()=>this.handlerTime(actividad.id)}
+                        handlerStopTime={()=>this.handlerStopTime(actividad.id)}
+                        ></Cronometro>
+                      <br></br>
+                    </Box>
+                )
+            }
+          </Box>
           {showForm 
             ? 
               <ActivityForm

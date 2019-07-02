@@ -1,4 +1,10 @@
 import React from 'react';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
 
 class Cronometro extends React.Component {
 
@@ -26,8 +32,8 @@ class Cronometro extends React.Component {
 
     startChrono(){
         this.incrementer=setInterval(()=>{
-                this.props.handlerTime();
-            },100);          
+            this.props.handlerTime();
+        },100);          
     }
 
     stopChrono(){
@@ -40,20 +46,47 @@ class Cronometro extends React.Component {
         this.props.deleteActivity()
     }
 
+    componentDidUpdate(prevProps){
+        if (prevProps.activity.id !== this.props.activity.id ) {
+            this.setNewInterval()
+        }
+    }
+
+    setNewInterval(){
+        if(this.props.activity.status === 'stop'){
+            this.startChrono()
+        }
+    }
+
+    componentWillUnmount(){
+        clearInterval(this.incrementer);
+    }
+
     render(){
         const { activity, openEditActivitie}=this.props;
         return(
-            <React.Fragment>
-                <div className=''>
-                    <span onClick={()=>openEditActivitie()}>Editar</span>
-                    <span onClick={()=>this.handleDelete()}>Eliminar</span>
-                    <h2>{activity.activity}</h2>
-                    <h3>{activity.project}</h3>
-                    <h2>{this.millisecondsToHuman(activity.ms)}</h2> 
-                    <span onClick={activity.status=== 'start' ? ()=>this.startChrono() : ()=>this.stopChrono()}>{activity.status}</span>
-                </div>
-            </React.Fragment>
-
+                <Card p={2} width="70%">
+                    <Box p={2} bgcolor="grey.200">
+                        <CardContent>
+                            <CardActions flexWrap="wrap">
+                                <Box width="50%">
+                                    <Button onClick={()=>openEditActivitie()} size="small" color="primary">Editar</Button>
+                                </Box>
+                                <Box width="50%">
+                                    <Button onClick={()=>this.handleDelete()} size="small" color="secondary">Eliminar</Button>
+                                </Box>
+                            </CardActions>
+                            <h2>{activity.activity}</h2>
+                            <Typography>{activity.project}</Typography>
+                            <h2>{this.millisecondsToHuman(activity.ms)}</h2> 
+                            <Button 
+                                onClick={activity.status=== 'start' ? ()=>this.startChrono() : ()=>this.stopChrono()} 
+                                variant="contained" color={activity.status=== 'start' ? "primary": "secondary"}
+                                style={activity.status==='start'?{backgroundColor: "green"}:{backgroundColor: "red"}}
+                                >{activity.status}</Button>
+                        </CardContent>
+                    </Box>
+                </Card>
         );
     }
 }
